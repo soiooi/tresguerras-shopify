@@ -15,8 +15,5 @@
       "src": "/(.*)",
       "dest": "api/index.js"
     }
-  ],
-  "env": {
-    "TRESGUERRAS_PASS": "@tresguerras_pass"
-  }
+  ]
 }

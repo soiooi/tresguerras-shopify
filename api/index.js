@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const TRESGUERRAS_USER = 'MAT00207379';
 const TRESGUERRAS_PASS = process.env.TRESGUERRAS_PASS || 'VkZWR1ZVMUVRWGxOUkdONlRucHNSRlF3TlZWVmEwWlVVbU5QVWxGVlJrUldSazVEVXpCV1dnPT0=';
@@ -15,13 +15,15 @@ const enableCors = (req, res) => {
   return false;
 };
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   if (enableCors(req, res)) return;
 
+  // Health check
   if (req.url === '/' && req.method === 'GET') {
     return res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   }
 
+  // Cotización
   if (req.url === '/cotizar' && req.method === 'POST') {
     try {
       const payload = {
@@ -38,7 +40,7 @@ export default async (req, res) => {
 
       return res.status(200).json(response.data);
     } catch (error) {
-      console.error('Error cotizaci�n:', error.message);
+      console.error('Error cotización:', error.message);
       return res.status(500).json({
         error: true,
         descripcion_error: error.message || 'Error en API Tresguerras'
@@ -46,6 +48,7 @@ export default async (req, res) => {
     }
   }
 
+  // Guía
   if (req.url === '/guia' && req.method === 'POST') {
     try {
       const payload = {
@@ -62,7 +65,7 @@ export default async (req, res) => {
 
       return res.status(200).json(response.data);
     } catch (error) {
-      console.error('Error gu�a:', error.message);
+      console.error('Error guía:', error.message);
       return res.status(500).json({
         error: true,
         descripcion_error: error.message
@@ -70,6 +73,7 @@ export default async (req, res) => {
     }
   }
 
+  // Rastreo
   if (req.url === '/rastreo' && req.method === 'POST') {
     try {
       const payload = {
