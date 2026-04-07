@@ -1,8 +1,36 @@
 const axios = require('axios');
 
 const TRESGUERRAS_USER = 'MAT00207379';
-// Contraseña REAL después de 3 decodificaciones
-const TRESGUERRAS_PASS = 'MAT00207379CONTRASEÑAACTSBKEY';
+// Tomar la variable de entorno (que está en Base64)
+const TRESGUERRAS_PASS_BASE64 = process.env.TRESGUERRAS_PASS || 'VkZWR1ZVMUVRWGxOUkdONlRucHNSRlF3TlZWVmEwWlVVbU5QVWxGVlJrUldSazVEVXpCV1dnPT0=';
+
+// 🔑 FUNCIÓN: Decodificar Base64 recursivamente hasta obtener texto legible
+function decodePassword(encoded, maxAttempts = 10) {
+  let current = encoded;
+  
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      const decoded = Buffer.from(current, 'base64').toString('utf8');
+      
+      // Si ya no parece Base64 (tiene espacios o caracteres no Base64)
+      if (!/^[A-Z0-9+\/=]+$/i.test(decoded) || decoded.includes(' ')) {
+        console.log(`✅ Decodificado después de ${i + 1} iteraciones`);
+        return decoded;
+      }
+      
+      current = decoded;
+    } catch (e) {
+      console.log(`⚠️ Decodificación detenida después de ${i} iteraciones`);
+      return current;
+    }
+  }
+  
+  return current;
+}
+
+// Decodificar la contraseña
+const TRESGUERRAS_PASS = decodePassword(TRESGUERRAS_PASS_BASE64);
+console.log('🔑 Contraseña decodificada correctamente');
 
 const TRESGUERRAS_BASE_URL = 'https://wsa.tresguerras.com.mx/services/apiTest/CustomerApi/WS_CocinasIndustriales/';
 
@@ -42,7 +70,6 @@ module.exports = async (req, res) => {
 
       console.log('📤 Enviando a Tresguerras');
       console.log('👤 Usuario:', TRESGUERRAS_USER);
-      console.log('🔐 Password:', '********');
 
       const response = await axios.post(
         `${TRESGUERRAS_BASE_URL}?action=ApiCotizacion`,
