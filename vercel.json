@@ -16,6 +16,14 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/generar-guia",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/rastrear",
+      "dest": "/api/index.js"
+    },
+    {
       "src": "/",
       "dest": "/api/index.js"
     }
